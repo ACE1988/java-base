@@ -13,7 +13,7 @@ Load factor The load factor is a measure of how full the hash table is allowed t
 3.  如果碰撞了，以链表的形式存在buckets后；
 4.  如果碰撞导致链表过长(大于等于TREEIFY_THRESHOLD)，就把链表转换成红黑树；
 5.  如果节点已经存在就替换old value(保证key的唯一性)
-6.  如果bucket满了(超过load factor*current capacity)，就要resize。
+6.  如果bucket满了(超过load factor*current capacity)，就要resize。<br />
 具体代码的实现如下：
 ```java
 public V put(K key, V value) {
@@ -71,11 +71,11 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
 }
 ```
 #get函数的实现
-<ul>
-<li>bucket里的第一个节点，直接命中；</li>
-<li>如果有冲突，则通过key.equals(k)去查找对应的entry,若为树，则在树中通过key.equals(k)查找，O(logn)； 若为链表，则在链表中通过key.equals(k)查找，O(n)。</li>
-</ul>
+1.  bucket里的第一个节点，直接命中
+2.  如果有冲突，则通过key.equals(k)去查找对应的entry,若为树，则在树中通过key.equals(k)查找，O(logn)； 若为链表，则在链表中通过key.equals(k)查找，O(n)。
+<br />
 具体代码的实现如下：
+
 ```java
 public V get(Object key) {
     Node<K,V> e;
