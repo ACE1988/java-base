@@ -1,4 +1,4 @@
-#、两个重要的参数
+#两个重要的参数
 在HashMap中有两个很重要的参数，容量(Capacity)和负载因子(Load factor)
 
 Initial capacity The capacity is the number of buckets in the hash table, 
@@ -7,13 +7,13 @@ Load factor The load factor is a measure of how full the hash table is allowed t
 简单的说，Capacity就是buckets的数目，Load factor就是buckets填满程度的最大比例。如果对迭代性能要求很高的话不要把capacity设置过大，
 也不要把load factor设置过小。当bucket填充的数目（即hashmap中元素的个数）大于capacity*load factor时就需要调整buckets的数目为当前的2倍。
 
-#、put函数的实现
-a:对key的hashCode()做hash，然后再计算index;
-b:如果没碰撞直接放到bucket里；
-c:如果碰撞了，以链表的形式存在buckets后；
-d:如果碰撞导致链表过长(大于等于TREEIFY_THRESHOLD)，就把链表转换成红黑树；
-e:如果节点已经存在就替换old value(保证key的唯一性)
-f:如果bucket满了(超过load factor*current capacity)，就要resize。
+#put函数的实现
+1.  对key的hashCode()做hash，然后再计算index;
+2.  如果没碰撞直接放到bucket里；
+3.  如果碰撞了，以链表的形式存在buckets后；
+4.  如果碰撞导致链表过长(大于等于TREEIFY_THRESHOLD)，就把链表转换成红黑树；
+5.  如果节点已经存在就替换old value(保证key的唯一性)
+6.  如果bucket满了(超过load factor*current capacity)，就要resize。
 具体代码的实现如下：
 ```java
 public V put(K key, V value) {
@@ -70,15 +70,10 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
     return null;
 }
 ```
-
-#、get函数的实现
-a:
-
-
+#get函数的实现
 <ul>
-<li>a:bucket里的第一个节点，直接命中；</li>
-<li>b:如果有冲突，则通过key.equals(k)去查找对应的entry,若为树，则在树中通过key.equals(k)查找，O(logn)；
-                                        若为链表，则在链表中通过key.equals(k)查找，O(n)。</li>
+<li>bucket里的第一个节点，直接命中；</li>
+<li>如果有冲突，则通过key.equals(k)去查找对应的entry,若为树，则在树中通过key.equals(k)查找，O(logn)； 若为链表，则在链表中通过key.equals(k)查找，O(n)。</li>
 </ul>
 具体代码的实现如下：
 ```java
@@ -110,7 +105,7 @@ final Node<K,V> getNode(int hash, Object key) {
     return null;
 }
 ```
-#、hash函数的实现
+#hash函数的实现
 在get和put的过程中，计算下标时，先对hashCode进行hash操作，然后再通过hash值进一步计算下标，如下图所示：
 hash
 ![image](https://github.com/ACE1988/java-base/blob/master/img/hashMap.png)
