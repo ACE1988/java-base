@@ -15,6 +15,7 @@ d:如果碰撞导致链表过长(大于等于TREEIFY_THRESHOLD)，就把链表�
 e:如果节点已经存在就替换old value(保证key的唯一性)
 f:如果bucket满了(超过load factor*current capacity)，就要resize。
 具体代码的实现如下：
+```java
 public V put(K key, V value) {
     // 对key的hashCode()做hash
     return putVal(hash(key), key, value, false, true);
@@ -68,6 +69,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
     afterNodeInsertion(evict);
     return null;
 }
+```
 
 3、get函数的实现
 a:bucket里的第一个节点，直接命中；
@@ -75,6 +77,7 @@ b:如果有冲突，则通过key.equals(k)去查找对应的entry
 若为树，则在树中通过key.equals(k)查找，O(logn)；
 若为链表，则在链表中通过key.equals(k)查找，O(n)。
 具体代码的实现如下：
+```java
 public V get(Object key) {
     Node<K,V> e;
     return (e = getNode(hash(key), key)) == null ? null : e.value;
@@ -102,6 +105,7 @@ final Node<K,V> getNode(int hash, Object key) {
     }
     return null;
 }
+```
 4、hash函数的实现
 在get和put的过程中，计算下标时，先对hashCode进行hash操作，然后再通过hash值进一步计算下标，如下图所示：
 hash
