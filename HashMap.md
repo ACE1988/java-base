@@ -105,15 +105,16 @@ final Node<K,V> getNode(int hash, Object key) {
     return null;
 }
 ```
-#hash函数的实现
+# hash函数的实现
 在get和put的过程中，计算下标时，先对hashCode进行hash操作，然后再通过hash值进一步计算下标，如下图所示：
 hash
 ![image](https://github.com/ACE1988/java-base/blob/master/img/hashMap.png)
 
 在对hashCode()计算hash时具体实现是这样的：
-
+```java
 static final int hash(Object key) {
     int h;
     return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
 }
+```
 可以看到这个函数大概的作用就是：高16bit不变，低16bit和高16bit做了一个异或
