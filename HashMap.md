@@ -127,10 +127,12 @@ Initializes or doubles table size. If null, allocates in accord with initial cap
 大致意思就是说，当超过限制的时候会resize，然而又因为我们使用的是2次幂的扩展(指长度扩为原来2倍)，所以，元素的位置要么是在原位置，要么是在原位置再移动2次幂的位置。
 
 怎么理解呢？例如我们从16扩展为32时，具体的变化如下所示：
+![image](https://github.com/ACE1988/java-base/blob/master/img/ceb6e6ac-d93b-11e4-98e7-c5a5a07da8c4.png)
 
 因此元素在重新计算hash之后，因为n变为2倍，那么n-1的mask范围在高位多1bit(红色)，因此新的index就会发生这样的变化：
-
+![image](https://github.com/ACE1988/java-base/blob/master/img/519be432-d93c-11e4-85bb-dff0a03af9d3.png)
 因此，我们在扩充HashMap的时候，不需要重新计算hash，只需要看看原来的hash值新增的那个bit是1还是0就好了，是0的话索引没变，是1的话索引变成“原索引+oldCap”。可以看看下图为16扩充为32的resize示意图：
+![image](https://github.com/ACE1988/java-base/blob/master/img/d7acbad8-d941-11e4-9493-2c5e69d084c0.png)
 
 这个设计确实非常的巧妙，既省去了重新计算hash值的时间，而且同时，由于新增的1bit是0还是1可以认为是随机的，因此resize的过程，均匀的把之前的冲突的节点分散到新的bucket了。
 
