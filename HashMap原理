@@ -105,7 +105,7 @@ final Node<K,V> getNode(int hash, Object key) {
 4、hash函数的实现
 在get和put的过程中，计算下标时，先对hashCode进行hash操作，然后再通过hash值进一步计算下标，如下图所示：
 hash
-https://yikun.github.io/2015/04/01/Java-HashMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/#&gid=1&pid=2
+![image](https://github.com/xxxx.jpg)
 
 在对hashCode()计算hash时具体实现是这样的：
 
