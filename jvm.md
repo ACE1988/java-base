@@ -1,4 +1,4 @@
-![img](img/hashtable2.png)
+![img](img/jvm_structure.jpg)
 
 ## JVM的内存结构大概分为：
 
