@@ -56,10 +56,47 @@ GC分代的基本假设：绝大部分对象的生命周期都非常短暂，存
  ### ParNew收集器
  ParNew收集器其实就是Serial收集器的多线程版本。新生代并行，老年代串行；新生代复制算法、老年代标记-压缩
 
-参数控制：
+* 参数控制：
 
-  * -XX:+UseParNewGC ParNew收集器
-  * -XX:ParallelGCThreads 限制线程数量
+  `-XX:+UseParNewGC ParNew收集器`
+  `-XX:ParallelGCThreads 限制线程数量`
 
  ![img](img/gc_5.webp)
+
+### Parallel收集器
+Parallel Scavenge收集器类似ParNew收集器，Parallel收集器更关注系统的吞吐量。可以通过参数来打开自适应调节策略，虚拟机会根据当前系统的运行情况收集性能监控信息，动态调整这些参数以提供最合适的停顿时间或最大的吞吐量；也可以通过参数控制GC的时间不大于多少毫秒或者比例；新生代复制算法、老年代标记-压缩
+
+`参数控制： -XX:+UseParallelGC 使用Parallel收集器+ 老年代串行`
+
+### Parallel Old 收集器
+
+Parallel Old是Parallel Scavenge收集器的老年代版本，使用多线程和“标记－整理”算法。这个收集器是在JDK 1.6中才开始提供
+
+`参数控制： -XX:+UseParallelOldGC 使用Parallel收集器+ 老年代并行`
+
+### CMS收集器
+
+CMS（Concurrent Mark Sweep）收集器是一种以获取最短回收停顿时间为目标的收集器。目前很大一部分的Java应用都集中在互联网站或B/S系统的服务端上，这类应用尤其重视服务的响应速度，希望系统停顿时间最短，以给用户带来较好的体验。
+
+从名字（包含“Mark Sweep”）上就可以看出CMS收集器是基于“标记-清除”算法实现的，它的运作过程相对于前面几种收集器来说要更复杂一些，整个过程分为4个步骤，包括：
+  * 初始标记（CMS initial mark）
+  * 并发标记（CMS concurrent mark）
+  * 重新标记（CMS remark）
+  * 并发清除（CMS concurrent sweep）
+
+其中初始标记、重新标记这两个步骤仍然需要“Stop The World”。初始标记仅仅只是标记一下GC Roots能直接关联到的对象，速度很快，并发标记阶段就是进行GC Roots Tracing的过程，而重新标记阶段则是为了修正并发标记期间，因用户程序继续运作而导致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间一般会比初始标记阶段稍长一些，但远比并发标记的时间短。
+
+由于整个过程中耗时最长的并发标记和并发清除过程中，收集器线程都可以与用户线程一起工作，所以总体上来说，CMS收集器的内存回收过程是与用户线程一起并发地执行。老年代收集器（新生代使用ParNew）
+
+__优点:__  并发收集、低停顿
+__缺点:__  产生大量空间碎片、并发阶段会降低吞吐量
+
+__参数控制：
+
+ * -XX:+UseConcMarkSweepGC 使用CMS收集器
+ * -XX:+ UseCMSCompactAtFullCollection Full GC后，进行一次碎片整理；整理过程是独占的，会引起停顿时间变长
+ * -XX:+CMSFullGCsBeforeCompaction 设置进行几次Full GC后，进行一次碎片整理
+ * -XX:ParallelCMSThreads 设定CMS的线程数量（一般情况约等于可用CPU数量）
+
+ ![img](img/gc_6.webp)
 
